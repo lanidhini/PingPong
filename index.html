@@ -1,0 +1,171 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Table Tennis Arcade</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="game-wrapper">
+
+    <header class="game-header">
+      <div>
+        <p class="eyebrow">ARCADE SPORTS</p>
+        <h1>Table Tennis</h1>
+        <p class="subtitle">Fast rallies. Spin shots. Big smashes.</p>
+      </div>
+
+      <div class="match-info">
+        <span id="status">Choose your settings</span>
+      </div>
+    </header>
+
+    <section class="setup-panel">
+
+      <div class="setting">
+        <label for="character">Character</label>
+        <select id="character">
+          <option value="speed">ACE — Speed</option>
+          <option value="spin">RAFA — Spin</option>
+          <option value="power">TANK — Power</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <label for="mode">Game Mode</label>
+        <select id="mode">
+          <option value="cpu">1 Player vs CPU</option>
+          <option value="two">2 Players</option>
+        </select>
+      </div>
+
+      <button id="startButton" class="start-button">
+        Start Match
+      </button>
+
+    </section>
+
+    <section class="scoreboard">
+
+      <div class="player-score">
+        <span class="player-label" id="playerOneName">ACE</span>
+        <strong id="playerOneScore">0</strong>
+      </div>
+
+      <div class="versus">
+        <span>FIRST TO</span>
+        <strong>7</strong>
+      </div>
+
+      <div class="player-score right">
+        <span class="player-label" id="playerTwoName">CPU</span>
+        <strong id="playerTwoScore">0</strong>
+      </div>
+
+    </section>
+
+    <section class="game-container">
+      <canvas
+        id="gameCanvas"
+        aria-label="Table tennis game"
+      ></canvas>
+
+      <div id="gameMessage" class="game-message">
+        <div class="message-card">
+          <div class="message-icon">🏓</div>
+          <h2>Table Tennis</h2>
+          <p>Choose your character and start a match.</p>
+          <button id="overlayStart">Start Game</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls">
+
+      <div class="control-card">
+        <h3>Player 1</h3>
+
+        <p>
+          <kbd>W</kbd>
+          <kbd>S</kbd>
+          Move
+        </p>
+
+        <p>
+          <kbd>A</kbd>
+          <kbd>D</kbd>
+          Spin
+        </p>
+
+        <p>
+          <kbd>SPACE</kbd>
+          Smash
+        </p>
+      </div>
+
+      <div class="control-card">
+        <h3>Player 2</h3>
+
+        <p>
+          <kbd>I</kbd>
+          <kbd>K</kbd>
+          Move
+        </p>
+
+        <p>
+          <kbd>J</kbd>
+          <kbd>L</kbd>
+          Spin
+        </p>
+
+        <p>
+          <kbd>ENTER</kbd>
+          Smash
+        </p>
+      </div>
+
+      <div class="control-card">
+        <h3>Mobile</h3>
+
+        <p>
+          Drag your paddle vertically with your finger.
+        </p>
+
+        <p>
+          Tap the game area to control Player 1.
+        </p>
+      </div>
+
+    </section>
+
+    <footer>
+      <button id="restartButton" class="secondary-button">
+        Restart Match
+      </button>
+
+      <span>
+        Table Tennis Arcade
+      </span>
+    </footer>
+
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
+```
