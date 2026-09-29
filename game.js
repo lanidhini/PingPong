@@ -1153,5 +1153,571 @@ function drawTable() {
     table.x,
     table.y,
     table.width,
-    ta
+    table.height
+  );
+
+
+  /* Outer lines */
+
+  ctx.strokeStyle =
+    "#f4f7f5";
+
+  ctx.lineWidth = 5;
+
+  ctx.strokeRect(
+    table.x,
+    table.y,
+    table.width,
+    table.height
+  );
+
+
+  /* Center line */
+
+  ctx.lineWidth = 3;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    table.x,
+    table.y +
+      table.height / 2
+  );
+
+  ctx.lineTo(
+    table.x +
+      table.width,
+    table.y +
+      table.height / 2
+  );
+
+  ctx.stroke();
+
+}
+
+
+/* =========================================================
+   DRAW NET
+========================================================= */
+
+function drawNet() {
+
+  /* Posts */
+
+  ctx.fillStyle =
+    "#101714";
+
+  ctx.fillRect(
+    table.netX - 9,
+    table.y - 18,
+    9,
+    table.height + 36
+  );
+
+  ctx.fillRect(
+    table.netX,
+    table.y - 18,
+    9,
+    table.height + 36
+  );
+
+
+  /* Net */
+
+  ctx.fillStyle =
+    "rgba(235,235,235,0.75)";
+
+  ctx.fillRect(
+    table.netX - 4,
+    table.y - 12,
+    8,
+    table.height + 24
+  );
+
+
+  /* Net texture */
+
+  ctx.strokeStyle =
+    "rgba(255,255,255,0.18)";
+
+  ctx.lineWidth = 1;
+
+  for (
+    let y = table.y;
+    y < table.y + table.height;
+    y += 12
+  ) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      table.netX - 4,
+      y
+    );
+
+    ctx.lineTo(
+      table.netX + 4,
+      y
+    );
+
+    ctx.stroke();
+
+  }
+
+}
+
+
+/* =========================================================
+   DRAW PADDLES
+========================================================= */
+
+function drawPaddle(
+  x,
+  y,
+  color,
+  left
+) {
+
+  ctx.fillStyle = color;
+
+  ctx.fillRect(
+    x,
+    y,
+    PADDLE_WIDTH,
+    PADDLE_HEIGHT
+  );
+
+
+  /* Handle */
+
+  ctx.fillStyle =
+    "#111";
+
+  const handleX =
+    left
+      ? x + 10
+      : x + 4;
+
+  ctx.fillRect(
+    handleX,
+    y +
+      PADDLE_HEIGHT -
+      22,
+    8,
+    22
+  );
+
+}
+
+
+/* =========================================================
+   DRAW BALL
+========================================================= */
+
+function drawBall() {
+
+  /* Trail */
+
+  for (
+    let i = 0;
+    i < ball.trail.length;
+    i++
+  ) {
+
+    const trail =
+      ball.trail[i];
+
+    const alpha =
+      i /
+      ball.trail.length /
+      3;
+
+    ctx.globalAlpha =
+      alpha;
+
+    ctx.beginPath();
+
+    ctx.arc(
+      trail.x,
+      trail.y,
+      BALL_RADIUS * 0.8,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle =
+      "#ffffff";
+
+    ctx.fill();
+
+  }
+
+  ctx.globalAlpha = 1;
+
+
+  /* Ball */
+
+  ctx.beginPath();
+
+  ctx.arc(
+    ball.x,
+    ball.y,
+    BALL_RADIUS,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.fill();
+
+  ctx.strokeStyle =
+    "rgba(0,0,0,0.35)";
+
+  ctx.lineWidth = 2;
+
+  ctx.stroke();
+
+
+  /* Spin indicator */
+
+  if (
+    Math.abs(ball.spin) > 1
+  ) {
+
+    ctx.strokeStyle =
+      "#ffffff";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    if (ball.spin > 0) {
+
+      ctx.arc(
+        ball.x,
+        ball.y,
+        BALL_RADIUS + 7,
+        -0.8,
+        0.8
+      );
+
+    } else {
+
+      ctx.arc(
+        ball.x,
+        ball.y,
+        BALL_RADIUS + 7,
+        Math.PI - 0.8,
+        Math.PI + 0.8
+      );
+
+    }
+
+    ctx.stroke();
+
+  }
+
+}
+
+
+/* =========================================================
+   DRAW EVERYTHING
+========================================================= */
+
+function draw() {
+
+  ctx.clearRect(
+    0,
+    0,
+    WIDTH,
+    HEIGHT
+  );
+
+  drawBackground();
+
+  drawTable();
+
+  drawNet();
+
+
+  drawPaddle(
+    table.x - 40,
+    playerOne.y,
+    "#f4f7f5",
+    true
+  );
+
+
+  drawPaddle(
+    table.x +
+      table.width +
+      18,
+    playerTwo.y,
+    "#f4f7f5",
+    false
+  );
+
+
+  drawBall();
+
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(time) {
+
+  const deltaTime =
+    Math.min(
+      (time - lastTime) / 1000 || 0,
+      0.025
+    );
+
+  lastTime = time;
+
+  update(deltaTime);
+
+  draw();
+
+  animationFrame =
+    requestAnimationFrame(
+      gameLoop
+    );
+
+}
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+window.addEventListener(
+  "keydown",
+  (event) => {
+
+    const key =
+      event.key.toLowerCase();
+
+    const gameKeys = [
+      "w",
+      "s",
+      "a",
+      "d",
+      "i",
+      "k",
+      "j",
+      "l",
+      " ",
+      "enter",
+      "arrowup",
+      "arrowdown"
+    ];
+
+    if (
+      gameKeys.includes(key)
+    ) {
+
+      event.preventDefault();
+
+      keys.add(key);
+
+    }
+
+
+    /* Player 1 spin */
+
+    if (key === "a") {
+      applySpin(1, -1);
+    }
+
+    if (key === "d") {
+      applySpin(1, 1);
+    }
+
+
+    /* Player 2 spin */
+
+    if (key === "j") {
+      applySpin(2, -1);
+    }
+
+    if (key === "l") {
+      applySpin(2, 1);
+    }
+
+
+    /* Smash */
+
+    if (key === " ") {
+      smash(1);
+    }
+
+    if (key === "enter") {
+      smash(2);
+    }
+
+  }
+);
+
+
+window.addEventListener(
+  "keyup",
+  (event) => {
+
+    keys.delete(
+      event.key.toLowerCase()
+    );
+
+  }
+);
+
+
+/* =========================================================
+   MOBILE TOUCH
+========================================================= */
+
+function movePlayerWithTouch(event) {
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  const relativeY =
+    (
+      event.clientY -
+      rect.top
+    ) /
+    rect.height;
+
+  const canvasY =
+    relativeY *
+    HEIGHT;
+
+  playerOne.y =
+    clamp(
+      canvasY -
+        PADDLE_HEIGHT / 2,
+      table.y,
+      table.y +
+        table.height -
+        PADDLE_HEIGHT
+    );
+
+}
+
+
+canvas.addEventListener(
+  "pointerdown",
+  (event) => {
+
+    dragging = true;
+
+    canvas.setPointerCapture(
+      event.pointerId
+    );
+
+    movePlayerWithTouch(event);
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointermove",
+  (event) => {
+
+    if (!dragging) {
+      return;
+    }
+
+    movePlayerWithTouch(event);
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointerup",
+  () => {
+
+    dragging = false;
+
+  }
+);
+
+
+canvas.addEventListener(
+  "pointercancel",
+  () => {
+
+    dragging = false;
+
+  }
+);
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+startButton.addEventListener(
+  "click",
+  startMatch
+);
+
+restartButton.addEventListener(
+  "click",
+  restartMatch
+);
+
+overlayStart.addEventListener(
+  "click",
+  startMatch
+);
+
+
+characterSelect.addEventListener(
+  "change",
+  updateNames
+);
+
+difficultySelect.addEventListener(
+  "change",
+  updateNames
+);
+
+modeSelect.addEventListener(
+  "change",
+  updateNames
+);
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+window.addEventListener(
+  "resize",
+  resizeCanvas
+);
+
+updateNames();
+
+updateScoreboard();
+
+resizeCanvas();
+
+draw();
+
+cancelAnimationFrame(
+  animationFrame
+);
+
+animationFrame =
+  requestAnimationFrame(
+    gameLoop
+);
 ```
